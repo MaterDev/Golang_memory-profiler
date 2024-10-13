@@ -106,11 +106,3 @@ This project allows you to compare profiler output with direct memory measuremen
 1. Use `AllocateHandler` (`/allocate`) to trigger a large allocation and observe it in the profiler.
 2. Use `AllocateHandler2` (`/allocate2`) to see the exact memory allocated using `runtime.ReadMemStats`.
 3. Compare these results to understand the accuracy of the profiler and the actual memory behavior of your application.
-
-## Contributing
-
-Feel free to open issues or submit pull requests if you have suggestions for improvements or find any bugs.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
