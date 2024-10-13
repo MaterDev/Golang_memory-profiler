@@ -2,10 +2,14 @@ package handler
 
 import (
 	"fmt"
+	"golang-memory-profiler/profiling"
+	"log"
 	"net/http"
+	"runtime"
+	"time"
 )
 
-/* 
+/*
 	HelloHandler() will respond with a simple Hello World, to demonstrate server is working
 		An initial health check that things are up and running.
 */
@@ -57,8 +61,17 @@ func AllocateHandler(w http.ResponseWriter, r *http.Request) {
 	// This is just doing somethign with the data to prevent the Go compiler from optimizing it away.
 	data[0] = 1
 
+	time.Sleep(1 * time.Second) // Hold the allocation
+
+	// Write heap profile after allocation
+	 err := profiling.WriteHeapProfile("heap_after_alloc.prof")
+	 if err != nil {
+		 log.Printf("Could not write heap profile: %v", err)
+	 }
+
 	// Respond to HTTP request
 	fmt.Fprintf(w, "Allocated 100 MB \n")
+	fmt.Printf("Data length: %v", len(data))
 
 	// Once the slice goes out of scope, such as when the function returns, it become eligible for garbage collection. This may not happen immediately.
 
@@ -68,4 +81,20 @@ func AllocateHandler(w http.ResponseWriter, r *http.Request) {
 			- Image processing
 			- Temporary storage for large data sets.
 	*/
+}
+
+
+func AllocateHandler2(w http.ResponseWriter, r *http.Request) {
+	var m1, m2 runtime.MemStats
+	runtime.ReadMemStats(&m1)
+
+	data := make([]byte, 100*1024*1024)
+	data[0] = 1
+
+	runtime.ReadMemStats(&m2)
+
+	fmt.Fprintf(w, "Heap Alloc Before: %d, After: %d, Diff: %d\n", 
+		m1.HeapAlloc, m2.HeapAlloc, m2.HeapAlloc-m1.HeapAlloc)
+	fmt.Fprintf(w, "Heap Sys Before: %d, After: %d, Diff: %d\n", 
+		m1.HeapSys, m2.HeapSys, m2.HeapSys-m1.HeapSys)
 }

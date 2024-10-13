@@ -1,6 +1,8 @@
-# Go Memory Profiling Tutorial (Explained)
+# Go Memory Profiler
 
-This project demonstrates how to use Go's built-in tools to profile memory usage in a simple HTTP server application. It's designed for beginners to understand memory concepts and profiling in Go.
+![Cover Image](./images/cover.png)
+
+This project demonstrates how to use Go's built-in tools to profile memory usage in a simple HTTP server application. It's designed for beginners to understand memory concepts and profiling in Go, including both automated profiling and direct memory measurements.
 
 ## Key Concepts
 
@@ -52,31 +54,63 @@ The server will start on `http://localhost:8080`.
 
 ## Understanding the Code
 
-Each file in this project contains detailed comments explaining what each part does and why. Be sure to read through the code comments to understand how memory allocation and profiling work in Go.
+Each file in this project contains detailed comments explaining what each part does and why. The main components are:
 
-## Profiling
+- `main.go`: Sets up the HTTP server and routes.
+- `handler/handler.go`: Contains three handlers:
+  - `HelloHandler`: A simple greeting handler.
+  - `AllocateHandler`: Demonstrates large memory allocation for profiling.
+  - `AllocateHandler2`: Provides direct memory measurement using `runtime.ReadMemStats`.
+- `profiling/profiling.go`: Configures profiling settings.
 
-1. While the application is running, access the pprof interface at `http://localhost:8080/debug/pprof/`.
+## Profiling and Memory Analysis
 
-2. Generate a heap profile (shows memory allocation):
+1. Access the pprof interface at `http://localhost:8080/debug/pprof/`.
+
+2. Generate a heap profile:
    ```
    go tool pprof http://localhost:8080/debug/pprof/heap
    ```
 
-3. Generate a 30-second CPU profile (shows where the program spends its time):
+3. Generate a 30-second CPU profile:
    ```
    go tool pprof http://localhost:8080/debug/pprof/profile?seconds=30
    ```
 
-4. View goroutines (lightweight threads managed by Go runtime):
+4. View goroutines:
    ```
    go tool pprof http://localhost:8080/debug/pprof/goroutine
    ```
 
+5. Direct memory measurement:
+   Visit `http://localhost:8080/allocate2` to see real-time memory allocation statistics.
+
 ## Analyzing Profiles
 
-After generating a profile, you can use these commands in the pprof interactive mode:
+`Terminal Curl HTTP Request`
+![Terminal HTTP](./images/http.png)
+
+`Terminal Profiler`
+![Terminal Golang Profiler](./images/profiler.png)
+
+In the pprof interactive mode:
 
 - `top`: Shows the top memory-consuming functions
 - `web`: Generates a graph visualization (requires Graphviz)
 - `list <function>`: Shows line-by-line memory usage for a function
+
+## Comparing Profiler Data with Direct Measurements
+
+This project allows you to compare profiler output with direct memory measurements:
+
+1. Use `AllocateHandler` (`/allocate`) to trigger a large allocation and observe it in the profiler.
+2. Use `AllocateHandler2` (`/allocate2`) to see the exact memory allocated using `runtime.ReadMemStats`.
+3. Compare these results to understand the accuracy of the profiler and the actual memory behavior of your application.
+
+## Contributing
+
+Feel free to open issues or submit pull requests if you have suggestions for improvements or find any bugs.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

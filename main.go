@@ -3,13 +3,15 @@ package main
 import (
 	"fmt"
 	"golang-memory-profiler/handler"
+	"golang-memory-profiler/profiling"
 	"log"
 	"net/http"
 	"time"
 )
 
 func main() {
-	fmt.Printf("Hello World 🌎")
+	// ! Enable profiling
+	profiling.EnableProfiling()
 
 	/** 
 		Setup some routes. Will use built-in api for handling server code.
@@ -17,6 +19,7 @@ func main() {
 	*/
 	http.HandleFunc("/", handler.HelloHandler)
 	http.HandleFunc("/allocate", handler.AllocateHandler)
+	http.HandleFunc("/allocate2", handler.AllocateHandler2)
 
 	// * Timestamp on server start/restart to keep track of updates in console
 	log.Printf("Server starting at %s", time.Now().Format(time.RFC3339))
