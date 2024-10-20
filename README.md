@@ -33,7 +33,7 @@ go-memory-profiling/
 
 1. Clone this repository:
    ```
-   git clone https://github.com/yourusername/go-memory-profiling.git
+   git clone https://github.com/MaterDev/Golang_memory-profiler.git
    cd go-memory-profiling
    ```
 
